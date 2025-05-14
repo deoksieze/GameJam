@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class FollowPlayer : MonoBehaviour
+public class EnemyMovement : MonoBehaviour
 {   
-    public float speed = 1.0f;
+    public EnemyScriptableObject enemyData;
     Transform target;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -13,7 +13,7 @@ public class FollowPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var step = speed * Time.deltaTime;
+        var step = enemyData.MoveSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, target.position, step);
     }
 }

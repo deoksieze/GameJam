@@ -1,3 +1,5 @@
+using System.Net.Sockets;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -6,8 +8,23 @@ using UnityEngine;
 public class ProjectileWeaponBehaviour : MonoBehaviour
 {
 
+    public WeaponScriptableObject weaponData;
     protected Vector3 direction;
     public float destroyAfterSeconds;
+
+    //Current stats
+    protected float currentDamage;
+    protected float currentSpeed;
+    protected float currentCooldownDutation;
+    protected int currentPierce;
+
+    void Awake()
+    {
+        currentCooldownDutation = weaponData.CooldownDuration;
+        currentDamage = weaponData.Damage;
+        currentSpeed = weaponData.Speed;
+        currentPierce = weaponData.Pierce;
+    }
     protected virtual void Start()
     {
         Destroy(gameObject, destroyAfterSeconds);
@@ -60,5 +77,25 @@ public class ProjectileWeaponBehaviour : MonoBehaviour
 
         transform.localScale = scale;
         transform.rotation = Quaternion.Euler(rotation);
+    }
+
+    protected virtual void OnTriggerEnter2D(Collider2D col)
+    {
+        //Получем врага, которого мы коснулись и наносим ему урон.  
+        if(col.CompareTag("Enemy"))
+        {
+            EnemyStats enemy = col.GetComponent<EnemyStats>();
+            enemy.TakeDamage(currentDamage);
+            ReducePierce();
+        }
+    } 
+
+    void ReducePierce()  //Как только значение достигает 0, уничтожаем противника
+    {
+        currentPierce--;
+        if(currentPierce <= 0) 
+        {
+            Destroy(gameObject);
+        }
     }
 }

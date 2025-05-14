@@ -5,31 +5,27 @@ using UnityEngine.Timeline;
 public class WeaponController : MonoBehaviour
 {
     [Header("Weapon Stats")]
-    public GameObject prefab;
-    public float damage;
-    public float speed;
-    public float cooldownDuration;
-    float currentCooldowan;
-    public int pierce;
+    public WeaponScriptableObject weaponData;
+    float currentCooldown;
 
     protected Movement pm;
 
     protected virtual void Start() {
         pm = FindFirstObjectByType<Movement>();
-        currentCooldowan = cooldownDuration;
+        currentCooldown = weaponData.CooldownDuration;
     }
 
     protected virtual void Update() {
         
-        currentCooldowan -= Time.deltaTime;
+        currentCooldown -= Time.deltaTime;
 
-        if (currentCooldowan <= 0f) {
+        if (currentCooldown <= 0f) {
             Attack();
         }
     }
     
     protected virtual void Attack()
     {
-        currentCooldowan = cooldownDuration;
+        currentCooldown = weaponData.CooldownDuration;
     }
 }

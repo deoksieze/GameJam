@@ -10,7 +10,7 @@ public class FireballController : WeaponController
     protected override void Attack() 
     {
         base.Attack();
-        GameObject spawnedFireball = Instantiate(prefab);
+        GameObject spawnedFireball = Instantiate(weaponData.Prefab);
         spawnedFireball.transform.position = transform.position; //Позиция родителя
         spawnedFireball.GetComponent<FireballBehaviour>().DirectionChecker(pm.lastMovedVector);
     }
