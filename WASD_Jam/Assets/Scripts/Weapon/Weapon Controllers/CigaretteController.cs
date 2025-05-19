@@ -6,7 +6,6 @@ public class CigaretteController : WeaponController
     {
         base.Start();
     }
-
     protected override void Attack()
     {
         base.Attack();
