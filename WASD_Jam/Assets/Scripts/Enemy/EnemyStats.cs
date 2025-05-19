@@ -14,14 +14,14 @@ public class EnemyStats : MonoBehaviour
     {
         currentMoveSpeed = enemyData.MoveSpeed;
         currentDamage = enemyData.Damage;
-        currentHealth = enemyData.MaxHealth;    
+        currentHealth = enemyData.MaxHealth;
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
 
-        if (currentHealth <= 0) 
+        if (currentHealth <= 0)
         {
             Kill();
         }
@@ -30,5 +30,14 @@ public class EnemyStats : MonoBehaviour
     public void Kill()
     {
         Destroy(gameObject);
+    }
+
+    private void OnCollisionStay2D(Collision2D col)
+    {
+        if (col.gameObject.CompareTag("Player"))
+        {
+            PlayerStats player = col.gameObject.GetComponent<PlayerStats>();
+            player.TakeDamage(currentDamage);
+        }
     }
 }

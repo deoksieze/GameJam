@@ -1,18 +1,22 @@
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName ="EnemyScriptableObject", menuName ="ScriptableObject/enemy")]
+[CreateAssetMenu(fileName = "EnemyScriptableObject", menuName = "ScriptableObject/enemy")]
 public class EnemyScriptableObject : ScriptableObject
 {
     //Base stats for the enemyes
 
     [SerializeField]
     float moveSpeed;
-    public float MoveSpeed {get => moveSpeed; private set => moveSpeed = value;}
+    public float MoveSpeed { get => moveSpeed; private set => moveSpeed = value; }
     [SerializeField]
     float maxHealth;
-    public float MaxHealth {get => maxHealth; private set => maxHealth = value; }
+    public float MaxHealth { get => maxHealth; private set => maxHealth = value; }
     [SerializeField]
-    float damage; 
-    public float Damage {get => damage; private set => damage = value; }
+    float damage;
+    public float Damage { get => damage; private set => damage = value; }
+
+    [SerializeField]
+    float distanseToPlayer;
+    public float DistanseToPlayer { get => distanseToPlayer; private set => distanseToPlayer = value;}
 }

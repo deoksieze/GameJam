@@ -13,7 +13,12 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var step = enemyData.MoveSpeed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, target.position, step);
+        float distanse = Vector2.Distance(target.position, transform.position);
+        Debug.Log(distanse);
+        if (distanse >= enemyData.DistanseToPlayer)
+        {
+            var step = enemyData.MoveSpeed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, target.position, step);
+        }
     }
 }

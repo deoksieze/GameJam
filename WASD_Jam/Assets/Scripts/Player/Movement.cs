@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    public float speed;
+    // public float speed;
     private float moveVerctical;
     private float moveHorizontal;
     private Vector2 directon;
@@ -11,7 +11,9 @@ public class Movement : MonoBehaviour
     [HideInInspector]
     public Vector2 lastMovedVector;
 
+    //Reference
     private Rigidbody2D rb;
+    public CharacterScriptableObject characterData;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -39,7 +41,7 @@ public class Movement : MonoBehaviour
         }
 
 
-        rb.linearVelocity = directon * speed; 
+        rb.linearVelocity = directon * characterData.MoveSpeed; 
     }
 
     public Vector2 GetDirection() 
