@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerStats : MonoBehaviour
 {
     public CharacterScriptableObject characterData;
+    public UI_manager uI_Manager;
 
     //current Stats:
     float currentHealth;
@@ -41,6 +42,9 @@ public class PlayerStats : MonoBehaviour
         {
             isInvinciblle = false;
         }
+
+        uI_Manager.SetMoney(currentMoney);
+        uI_Manager.SetHealth(currentHealth);
     }
 
     public void IncreaseMoney(int money)

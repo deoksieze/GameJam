@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3462988216284403165}
   - component: {fileID: -5231532288988979762}
   m_Layer: 0
-  m_Name: Gopnick
+  m_Name: Bandit
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.195, y: 0.824, z: 0.06222717}
-  m_LocalScale: {x: 0.07545781, y: 0.07545781, z: 0.07545781}
+  m_LocalScale: {x: 0.14012219, y: 0.14012219, z: 0.07012219}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -80,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 6124679873823816830, guid: 6e8fe8574f5419b4cbb1fed7b7ae6a8e, type: 3}
+  m_Sprite: {fileID: -4701371161730248689, guid: f91fe67974c25e24e830f58ea454053f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45849e839a9571e4b9fd19bf0b54f355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 11400000, guid: a33662e1714ad3d4d834d34d42fb1d3d, type: 2}
+  enemyData: {fileID: 11400000, guid: 59a36267ba5a98c46a28fbf71fa266be, type: 2}
 --- !u!61 &8038937047832924244
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -138,17 +138,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.08897972, y: -0.029660225}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 7.7, y: 18.26}
+    oldSize: {x: 5.46, y: 10.24}
     newSize: {x: 7.7, y: 18.26}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 7.7, y: 18.26}
+  m_Size: {x: 5.9796743, y: 10.78549}
   m_EdgeRadius: 0
 --- !u!114 &3462988216284403165
 MonoBehaviour:

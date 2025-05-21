@@ -19,4 +19,5 @@ public class EnemyScriptableObject : ScriptableObject
     [SerializeField]
     float distanseToPlayer;
     public float DistanseToPlayer { get => distanseToPlayer; private set => distanseToPlayer = value;}
+
 }

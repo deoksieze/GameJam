@@ -14,7 +14,6 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
         float distanse = Vector2.Distance(target.position, transform.position);
-        Debug.Log(distanse);
         if (distanse >= enemyData.DistanseToPlayer)
         {
             var step = enemyData.MoveSpeed * Time.deltaTime;
