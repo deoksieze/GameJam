@@ -98,7 +98,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6650884041837960960}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45849e839a9571e4b9fd19bf0b54f355, type: 3}
   m_Name: 
@@ -164,6 +164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: a33662e1714ad3d4d834d34d42fb1d3d, type: 2}
   despawnDistance: 20
+  shootTimer: 0
 --- !u!114 &-5231532288988979762
 MonoBehaviour:
   m_ObjectHideFlags: 0

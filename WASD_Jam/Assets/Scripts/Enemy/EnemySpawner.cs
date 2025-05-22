@@ -4,117 +4,136 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [System.Serializable]
-    public class Wave
-    {
-        public string waveName;
-        public List<EnemyGroup> enemyGroups;
-        public int waveQuouta; //Количество врагов, которые заспаунятся в эту волну
-        public float spawnInterval; //Интервал через которая спунятся ещё враги
-        public int spawnCount; //Количество уже появившихся в этой волне протвников
-    }
+    public string currentLocation;
 
-    [System.Serializable]
-    public class EnemyGroup
-    {
-        public string enemyName;
-        public GameObject enemyPrefab;
-        public int enemyCount; //Количество врагов этого типа, которые появятся в этой волне
-        public int spawnCount; //Количество уже появившихся в этой волне протвников этого типа
-    }
-
-    public List<Wave> waves;
+    public Dictionary<string, LocationScriptableObject> locationsData = new Dictionary<string, LocationScriptableObject>();
     public int currentWaveIndex;
 
     [Header("Spawner Attributes")]
-    float spawnerTimer;
+    private float spawnerTimer;
     public float waveInterval;
     public Transform player;
     public int enemiesAlive;
-    public int maxEnemyiesAllowed;
-    public bool maxEnemyiesReached = false;
+    public int maxEnemiesAllowed;
+    public bool maxEnemiesReached = false;
 
     [Header("Spawn Points")]
     public List<Transform> relativeSpawnPoints;
 
     void Start()
     {
-        CalculateWaveQuota();
+        // Опционально — если currentLocation уже установлен
+        if (!string.IsNullOrEmpty(currentLocation) && locationsData.ContainsKey(currentLocation))
+        {
+            CalculateWaveQuota();
+        }
     }
 
     void Update()
     {
+        if (!locationsData.ContainsKey(currentLocation)) return;
 
-        if (currentWaveIndex < waves.Count && waves[currentWaveIndex].spawnCount == 0)
+        var location = locationsData[currentLocation];
+
+        if (location.IsHub)
+        {
+            // В хабе враги не спаунятся
+            return;
+        }
+
+        var waves = location.Waves;
+
+        if (currentWaveIndex >= waves.Count) return;
+
+        if (waves[currentWaveIndex].SpawnCount == 0)
         {
             StartCoroutine(BeginNextWave());
         }
 
         spawnerTimer += Time.deltaTime;
 
-        if (spawnerTimer >= waves[currentWaveIndex].spawnInterval)
+        if (spawnerTimer >= waves[currentWaveIndex].SpawnInterval)
         {
             spawnerTimer = 0f;
             SpawnEnemies();
         }
     }
+
     IEnumerator BeginNextWave()
     {
         yield return new WaitForSeconds(waveInterval);
 
+        var waves = locationsData[currentLocation].Waves;
+
         if (currentWaveIndex < waves.Count - 1)
         {
-            currentWaveIndex += 1;
+            currentWaveIndex++;
             CalculateWaveQuota();
         }
     }
 
     public void CalculateWaveQuota()
     {
-        int currentWaveQuota = 0;
-        foreach (var enemyGroup in waves[currentWaveIndex].enemyGroups)
+        foreach (var kvp in locationsData)
         {
-            currentWaveQuota += enemyGroup.enemyCount;
+            string locationName = kvp.Key;
+            var location = kvp.Value;
+
+            if (location.IsHub) continue; // Пропускаем хабы
+
+            var waves = location.Waves;
+
+            for (int i = 0; i < waves.Count; i++)
+            {
+                int waveQuota = 0;
+
+                foreach (var enemyGroup in waves[i].EnemyGroups)
+                {
+                    waveQuota += enemyGroup.EnemyCount;
+                }
+
+                waves[i].WaveQuouta = waveQuota;
+                Debug.Log($"[{locationName}] Wave {i} quota: {waveQuota}");
+            }
         }
-
-        waves[currentWaveIndex].waveQuouta = currentWaveQuota;
-        Debug.Log(currentWaveQuota);
-
     }
+
 
     void SpawnEnemies()
     {
-        //Проверяем не запспаунились ли все враги в этой волне
-        if (waves[currentWaveIndex].spawnCount < waves[currentWaveIndex].waveQuouta && !maxEnemyiesReached)
+        if (!locationsData.ContainsKey(currentLocation)) return;
+
+        var wave = locationsData[currentLocation].Waves[currentWaveIndex];
+
+        if (wave.SpawnCount < wave.WaveQuouta && !maxEnemiesReached)
         {
-            //Проходимся по каждой группе врагов
-            foreach (var enemyGroup in waves[currentWaveIndex].enemyGroups)
+            foreach (var enemyGroup in wave.EnemyGroups)
             {
-                //Проверем для этой группы, заспаунились ли все её представители в этой волне
-                if (enemyGroup.spawnCount < enemyGroup.enemyCount)
+                if (enemyGroup.SpawnCount < enemyGroup.EnemyCount)
                 {
-                    if (enemiesAlive >= maxEnemyiesAllowed)
+                    if (enemiesAlive >= maxEnemiesAllowed)
                     {
-                        maxEnemyiesReached = true;
+                        maxEnemiesReached = true;
                         return;
                     }
 
-                    Instantiate(enemyGroup.enemyPrefab, player.position + relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)].position, Quaternion.identity);
+                    Vector3 spawnPos = player.position + relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)].position;
+                    Instantiate(enemyGroup.EnemyPrefab, spawnPos, Quaternion.identity);
 
                     enemiesAlive++;
-                    enemyGroup.spawnCount++;
-                    waves[currentWaveIndex].spawnCount++;
+                    enemyGroup.SpawnCount++;
+                    wave.SpawnCount++;
                 }
             }
         }
 
-        if (enemiesAlive < maxEnemyiesAllowed)
+        if (enemiesAlive < maxEnemiesAllowed)
         {
-            maxEnemyiesReached = false;
+            maxEnemiesReached = false;
         }
     }
 
-    public void onEnemyKilled()
+    public void OnEnemyKilled()
     {
         enemiesAlive--;
     }

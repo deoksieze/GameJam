@@ -90,7 +90,7 @@ public class ProjectileWeaponBehaviour : MonoBehaviour
         }
     } 
 
-    void ReducePierce()  //Как только значение достигает 0, уничтожаем противника
+    void ReducePierce()  //Как только значение достигает 0, уничтожаем оружие
     {
         currentPierce--;
         if(currentPierce <= 0) 

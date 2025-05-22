@@ -7,14 +7,17 @@ public class EnemyStats : MonoBehaviour
 
     //Current stats:
     float currentHealth;
-    float currentMoveSpeed;
+    public float currentMoveSpeed;
     float currentDamage;
+    public bool isActive;
 
     public float despawnDistance = 20;
+    public float shootTimer;
     Transform player;
 
     void Awake()
     {
+        isActive = true;
         currentMoveSpeed = enemyData.MoveSpeed;
         currentDamage = enemyData.Damage;
         currentHealth = enemyData.MaxHealth;
@@ -28,9 +31,21 @@ public class EnemyStats : MonoBehaviour
 
     void Update()
     {
+        if (!isActive) return;
+
         if (Vector2.Distance(player.position, transform.position) >= despawnDistance)
+            {
+                ReturnEnemy();
+            }
+
+        if (enemyData.IsLongRangeEnemy)
         {
-            ReturnEnemy();
+            shootTimer += Time.deltaTime;
+            if (Vector3.Distance(player.position, transform.position) <= enemyData.MaxShootDistance && shootTimer > enemyData.ShootInterval)
+            {
+                shootTimer = 0f;
+                Shoot();
+            }
         }
     }
 
@@ -61,11 +76,19 @@ public class EnemyStats : MonoBehaviour
     private void OnDestroy()
     {
         EnemySpawner enemySpawner = FindAnyObjectByType<EnemySpawner>();
-        enemySpawner.onEnemyKilled();
+        enemySpawner.OnEnemyKilled();
     }
 
     void ReturnEnemy() {
         EnemySpawner es = FindAnyObjectByType<EnemySpawner>();
-        transform.position = player.position + es.relativeSpawnPoints[Random.Range(0, es.relativeSpawnPoints.Count)].position; 
+        transform.position = player.position + es.relativeSpawnPoints[Random.Range(0, es.relativeSpawnPoints.Count)].position;
+    }
+
+    void Shoot()
+    {
+        GameObject bullet = Instantiate(enemyData.Bullet);
+        bullet.transform.position = transform.position;
+        EnemyWeapon enemyWeapon = bullet.GetComponent<EnemyWeapon>();
+        enemyWeapon.SetUpBullet(enemyData.BulletSpeed, enemyData.Damage, player.position - transform.position, enemyData.DestroyBulletAfter);
     }
 }

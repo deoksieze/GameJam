@@ -12,7 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b0ef793a21c2c4599eed6017cbea01, type: 3}
   m_Name: Bandit Enemy
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  maxHealth: 10
+  moveSpeed: 4
+  maxHealth: 20
   damage: 30
   distanseToPlayer: 3
+  isLongRangeEnemy: 0
+  bullet: {fileID: 0}
+  bulletSpeed: 0
+  shootInterval: 0
+  maxShootDistance: 0
+  destryBulletAfter: 0

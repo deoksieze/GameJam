@@ -16,3 +16,9 @@ MonoBehaviour:
   maxHealth: 10
   damage: 30
   distanseToPlayer: 3
+  isLongRangeEnemy: 1
+  bullet: {fileID: 492430824249486517, guid: 3233693d9bd3ae3418ef2b40c8edea18, type: 3}
+  bulletSpeed: 3
+  shootInterval: 3
+  maxShootDistance: 15
+  destryBulletAfter: 3
