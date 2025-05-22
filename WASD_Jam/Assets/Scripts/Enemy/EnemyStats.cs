@@ -81,7 +81,9 @@ public class EnemyStats : MonoBehaviour
 
     void ReturnEnemy() {
         EnemySpawner es = FindAnyObjectByType<EnemySpawner>();
-        transform.position = player.position + es.relativeSpawnPoints[Random.Range(0, es.relativeSpawnPoints.Count)].position;
+        var spawnPos = es.GeneratePosition();
+        if (!spawnPos.isFound) return;
+        transform.position = spawnPos.pos;
     }
 
     void Shoot()

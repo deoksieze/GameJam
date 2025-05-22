@@ -9,6 +9,8 @@ public class EnemySpawner : MonoBehaviour
     public Dictionary<string, LocationScriptableObject> locationsData = new Dictionary<string, LocationScriptableObject>();
     private List<LocationScript> allZones;
 
+    private LocationScript currentZone;
+
     public int currentWaveIndex;
 
     [Header("Spawner Attributes")]
@@ -108,7 +110,7 @@ public class EnemySpawner : MonoBehaviour
         if (!locationsData.ContainsKey(currentLocation)) return;
 
         var location = locationsData[currentLocation];
-        
+
         var wave = location.Waves[currentWaveIndex];
         // var wave = locationsData[currentLocation].Waves[currentWaveIndex];
 
@@ -123,19 +125,34 @@ public class EnemySpawner : MonoBehaviour
                         maxEnemiesReached = true;
                         return;
                     }
+                    //--------------------------------------------------------------------------------------
+                    currentZone = allZones.Find(z =>
+                    !z.locationData.IsHub &&
+                    z.locationData.LocationName == currentLocation);
 
-                    Vector3 spawnPos = player.position + relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)].position;
-                    var enemy = Instantiate(enemyGroup.EnemyPrefab, spawnPos, Quaternion.identity);
+                    if (currentZone == null)
+                        return; // Без зоны — не спауним
+
+                    var spawnPos = GeneratePosition();
+
+                    if (!spawnPos.isFound) return;
+
+                    var enemy = Instantiate(enemyGroup.EnemyPrefab, spawnPos.pos, Quaternion.identity);
                     EnemyStats enemyStats = enemy.GetComponent<EnemyStats>();
+                    currentZone.RegisterEnemy(enemyStats);
 
-                    foreach (var zone in allZones)
-                    {
-                        if (zone.locationData.IsHub) continue;
-                        if (zone.locationData.LocationName == currentLocation)
-                        {
-                            zone.RegisterEnemy(enemyStats);
-                        }
-                    }
+                    // Vector3 spawnPos = player.position + relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)].position;
+                    // var enemy = Instantiate(enemyGroup.EnemyPrefab, spawnPos, Quaternion.identity);
+                    // EnemyStats enemyStats = enemy.GetComponent<EnemyStats>();
+
+                    // foreach (var zone in allZones)
+                    // {
+                    //     if (zone.locationData.IsHub) continue;
+                    //     if (zone.locationData.LocationName == currentLocation)
+                    //     {
+                    //         zone.RegisterEnemy(enemyStats);
+                    //     }
+                    // }
 
                     enemiesAlive++;
                     enemyGroup.SpawnCount++;
@@ -153,5 +170,31 @@ public class EnemySpawner : MonoBehaviour
     public void OnEnemyKilled()
     {
         enemiesAlive--;
+    }
+
+    public (bool isFound, Vector2 pos) GeneratePosition()
+    {
+        Collider2D zoneCollider = currentZone.GetComponent<Collider2D>();
+                    if (zoneCollider == null)
+                        return (false, Vector2.zero);
+
+                    Vector3 spawnPos = Vector3.zero;
+                    bool validPositionFound = false;
+                    int maxAttempts = 10;
+
+                    for (int i = 0; i < maxAttempts; i++)
+                    {
+                        Vector3 candidatePos = player.position + relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)].position;
+
+                        // Проверка на попадание внутрь коллайдера зоны
+                        if (zoneCollider.OverlapPoint(candidatePos))
+                        {
+                            spawnPos = candidatePos;
+                            validPositionFound = true;
+                            return (validPositionFound, spawnPos);
+                        }
+                    }
+                    Debug.LogWarning("Не удалось найти подходящую позицию для спавна врага в зоне.");
+                    return (false, Vector2.zero);
     }
 }
