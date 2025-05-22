@@ -13,7 +13,7 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        if (enemyStats.isActive) return;
+        if (!enemyStats.isActive) return;
 
         float distanse = Vector2.Distance(target.position, transform.position);
         if (distanse >= enemyData.DistanseToPlayer)

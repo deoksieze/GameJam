@@ -104,6 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: a33662e1714ad3d4d834d34d42fb1d3d, type: 2}
+  enemyStats: {fileID: 3462988216284403165}
 --- !u!61 &8038937047832924244
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -163,6 +164,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: a33662e1714ad3d4d834d34d42fb1d3d, type: 2}
+  currentMoveSpeed: 0
+  isActive: 0
   despawnDistance: 20
   shootTimer: 0
 --- !u!114 &-5231532288988979762

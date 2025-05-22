@@ -7,6 +7,8 @@ public class EnemySpawner : MonoBehaviour
     public string currentLocation;
 
     public Dictionary<string, LocationScriptableObject> locationsData = new Dictionary<string, LocationScriptableObject>();
+    private List<LocationScript> allZones;
+
     public int currentWaveIndex;
 
     [Header("Spawner Attributes")]
@@ -27,6 +29,8 @@ public class EnemySpawner : MonoBehaviour
         {
             CalculateWaveQuota();
         }
+
+        allZones = new List<LocationScript>(Object.FindObjectsByType<LocationScript>(FindObjectsSortMode.None));
     }
 
     void Update()
@@ -103,7 +107,10 @@ public class EnemySpawner : MonoBehaviour
     {
         if (!locationsData.ContainsKey(currentLocation)) return;
 
-        var wave = locationsData[currentLocation].Waves[currentWaveIndex];
+        var location = locationsData[currentLocation];
+        
+        var wave = location.Waves[currentWaveIndex];
+        // var wave = locationsData[currentLocation].Waves[currentWaveIndex];
 
         if (wave.SpawnCount < wave.WaveQuouta && !maxEnemiesReached)
         {
@@ -118,7 +125,17 @@ public class EnemySpawner : MonoBehaviour
                     }
 
                     Vector3 spawnPos = player.position + relativeSpawnPoints[Random.Range(0, relativeSpawnPoints.Count)].position;
-                    Instantiate(enemyGroup.EnemyPrefab, spawnPos, Quaternion.identity);
+                    var enemy = Instantiate(enemyGroup.EnemyPrefab, spawnPos, Quaternion.identity);
+                    EnemyStats enemyStats = enemy.GetComponent<EnemyStats>();
+
+                    foreach (var zone in allZones)
+                    {
+                        if (zone.locationData.IsHub) continue;
+                        if (zone.locationData.LocationName == currentLocation)
+                        {
+                            zone.RegisterEnemy(enemyStats);
+                        }
+                    }
 
                     enemiesAlive++;
                     enemyGroup.SpawnCount++;
